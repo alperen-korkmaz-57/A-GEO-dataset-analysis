@@ -34,4 +34,4 @@ This repository serves as a portfolio piece demonstrating my proficiency in proc
 **Let's Connect:**
 - **Email:** [alperen57korkmaz@gmail.com]
 - **LinkedIn:** [https://www.linkedin.com/in/alperen-korkmaz-ba4b32322/]
-- **Project Report:** 
+- **Project Report:** [https://alperen-korkmaz-57.github.io/A-GEO-dataset-analysis./]
