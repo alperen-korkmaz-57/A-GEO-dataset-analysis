@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alperen Korkmaz">
+
+<title>GEO DataBase Influenza A Patients</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Quarto Influenza A_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Quarto Influenza A_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Quarto Influenza A_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Quarto Influenza A_files/libs/quarto-html/popper.min.js"></script>
+<script src="Quarto Influenza A_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Quarto Influenza A_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Quarto Influenza A_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Quarto Influenza A_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Quarto Influenza A_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Quarto Influenza A_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Quarto Influenza A_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GEO DataBase Influenza A Patients</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alperen Korkmaz </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="generating-a-volcano-plot-from-an-expression-data-set-obtained-from-the-geo-database" class="level1">
+<h1>Generating a volcano plot from an expression data set obtained from the GEO database</h1>
+<p>Installing needed packages and libraries.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Zorunlu paket yükleniyor: S4Vectors</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'S4Vectors' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Zorunlu paket yükleniyor: stats4
+Zorunlu paket yükleniyor: BiocGenerics
+Zorunlu paket yükleniyor: generics
+
+Attaching package: 'generics'
+
+The following object is masked from 'package:lubridate':
+
+    as.difftime
+
+The following object is masked from 'package:dplyr':
+
+    explain
+
+The following objects are masked from 'package:base':
+
+    as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+    setequal, union
+
+
+Attaching package: 'BiocGenerics'
+
+The following object is masked from 'package:dplyr':
+
+    combine
+
+The following objects are masked from 'package:stats':
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from 'package:base':
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
+    unsplit, which.max, which.min
+
+
+Attaching package: 'S4Vectors'
+
+The following objects are masked from 'package:lubridate':
+
+    second, second&lt;-
+
+The following objects are masked from 'package:dplyr':
+
+    first, rename
+
+The following object is masked from 'package:tidyr':
+
+    expand
+
+The following object is masked from 'package:utils':
+
+    findMatches
+
+The following objects are masked from 'package:base':
+
+    expand.grid, I, unname
+
+Zorunlu paket yükleniyor: IRanges
+
+Attaching package: 'IRanges'
+
+The following object is masked from 'package:lubridate':
+
+    %within%
+
+The following objects are masked from 'package:dplyr':
+
+    collapse, desc, slice
+
+The following object is masked from 'package:purrr':
+
+    reduce
+
+The following object is masked from 'package:grDevices':
+
+    windows
+
+Zorunlu paket yükleniyor: GenomicRanges
+Zorunlu paket yükleniyor: Seqinfo
+Zorunlu paket yükleniyor: SummarizedExperiment
+Zorunlu paket yükleniyor: MatrixGenerics
+Zorunlu paket yükleniyor: matrixStats</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'matrixStats' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'matrixStats'
+
+The following object is masked from 'package:dplyr':
+
+    count
+
+
+Attaching package: 'MatrixGenerics'
+
+The following objects are masked from 'package:matrixStats':
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Zorunlu paket yükleniyor: Biobase</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'Biobase' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: 'Biobase'
+
+The following object is masked from 'package:MatrixGenerics':
+
+    rowMedians
+
+The following objects are masked from 'package:matrixStats':
+
+    anyMissing, rowMedians</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Biobase)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GEOquery)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting options('download.file.method.GEOquery'='auto')
+Setting options('GEOquery.inmemory.gpl'=FALSE)</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EnhancedVolcano)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Zorunlu paket yükleniyor: ggrepel</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggrepel' was built under R version 4.5.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(limma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'limma'
+
+The following object is masked from 'package:DESeq2':
+
+    plotMA
+
+The following object is masked from 'package:BiocGenerics':
+
+    plotMA</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rlang)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'rlang' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rlang'
+
+The following object is masked from 'package:Biobase':
+
+    exprs
+
+The following objects are masked from 'package:purrr':
+
+    flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl,
+    flatten_raw, invoke, splice</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'data.table' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'data.table'
+
+The following object is masked from 'package:rlang':
+
+    :=
+
+The following object is masked from 'package:SummarizedExperiment':
+
+    shift
+
+The following object is masked from 'package:GenomicRanges':
+
+    shift
+
+The following object is masked from 'package:IRanges':
+
+    shift
+
+The following objects are masked from 'package:S4Vectors':
+
+    first, second
+
+The following objects are masked from 'package:lubridate':
+
+    hour, isoweek, isoyear, mday, minute, month, quarter, second, wday,
+    week, yday, year
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+The following object is masked from 'package:purrr':
+
+    transpose</code></pre>
+</div>
+</div>
+<p>We import the dataset and the supporting files.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>GSE68849 <span class="ot">&lt;-</span> <span class="fu">getGEO</span>(<span class="st">"GSE68849"</span>, <span class="at">GSEMatrix =</span> <span class="cn">TRUE</span>, <span class="at">destdir =</span> <span class="st">"."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Found 1 file(s)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>GSE68849_series_matrix.txt.gz</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using locally cached version: ./GSE68849_series_matrix.txt.gz</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using locally cached version of GPL10558 found here:
+./GPL10558.soft.gz </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>supp_files <span class="ot">&lt;-</span> <span class="fu">getGEOSuppFiles</span>(<span class="st">"GSE68849"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using locally cached version of supplementary file(s) GSE68849 found here:
+C:/Users/alper/Desktop/Quarto Influenza A/GSE68849/GSE68849_RAW.tar </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using locally cached version of supplementary file(s) GSE68849 found here:
+C:/Users/alper/Desktop/Quarto Influenza A/GSE68849/GSE68849_non-normalized.txt.gz </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>eset68849 <span class="ot">&lt;-</span> GSE68849[[<span class="dv">1</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Tidying the data.</p>
+<p>The GEO dataset contains various types of information; we have specific functions to extract each of them individually: exprs() .Retrieves the expression dataset from the eSet object. pData() .Retrieves clinical/metadata regarding the samples (phenotype data); information on experimental phenotypes recorded in eSet and ExpressionSet-derived classes. fData() .Retrieves information on features recorded in eSet-derived classes (feature data); extracts gene and annotation information related to the probes. experimentData() and annotation() .Contain general information—such as who conducted the experiment, the publication date, the PubMed ID, and the laboratory protocols used. These are important for reporting purposes rather than for data analysis.</p>
+<p>Getting clinical/metadata.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">pData</span>(eset68849)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(p_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                       title geo_accession
+GSM1684095 Donor 1 - No virus control   - 8h    GSM1684095
+GSM1684096  Donor 1 - Influenza treated - 8h    GSM1684096
+GSM1684097 Donor 2 - No virus control   - 8h    GSM1684097
+GSM1684098  Donor 2 - Influenza treated - 8h    GSM1684098
+GSM1684099 Donor 3 - No virus control   - 8h    GSM1684099
+GSM1684100  Donor 3 - Influenza treated - 8h    GSM1684100
+                          status submission_date last_update_date type
+GSM1684095 Public on Feb 01 2016     May 13 2015      Feb 01 2016  RNA
+GSM1684096 Public on Feb 01 2016     May 13 2015      Feb 01 2016  RNA
+GSM1684097 Public on Feb 01 2016     May 13 2015      Feb 01 2016  RNA
+GSM1684098 Public on Feb 01 2016     May 13 2015      Feb 01 2016  RNA
+GSM1684099 Public on Feb 01 2016     May 13 2015      Feb 01 2016  RNA
+GSM1684100 Public on Feb 01 2016     May 13 2015      Feb 01 2016  RNA
+           channel_count source_name_ch1 organism_ch1 characteristics_ch1
+GSM1684095             1      Blood pDCs Homo sapiens      donor: Donor 1
+GSM1684096             1      Blood pDCs Homo sapiens      donor: Donor 1
+GSM1684097             1      Blood pDCs Homo sapiens      donor: Donor 2
+GSM1684098             1      Blood pDCs Homo sapiens      donor: Donor 2
+GSM1684099             1      Blood pDCs Homo sapiens      donor: Donor 3
+GSM1684100             1      Blood pDCs Homo sapiens      donor: Donor 3
+             characteristics_ch1.1         characteristics_ch1.2
+GSM1684095 agent: No virus control cell type: Primary human pDCs
+GSM1684096      agent: Influenza A cell type: Primary human pDCs
+GSM1684097 agent: No virus control cell type: Primary human pDCs
+GSM1684098      agent: Influenza A cell type: Primary human pDCs
+GSM1684099 agent: No virus control cell type: Primary human pDCs
+GSM1684100      agent: Influenza A cell type: Primary human pDCs
+                                                  treatment_protocol_ch1
+GSM1684095 pDCs were cultured with or without influenza A virus for 8 h.
+GSM1684096 pDCs were cultured with or without influenza A virus for 8 h.
+GSM1684097 pDCs were cultured with or without influenza A virus for 8 h.
+GSM1684098 pDCs were cultured with or without influenza A virus for 8 h.
+GSM1684099 pDCs were cultured with or without influenza A virus for 8 h.
+GSM1684100 pDCs were cultured with or without influenza A virus for 8 h.
+                                                                                                                                                                                         growth_protocol_ch1
+GSM1684095 Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.
+GSM1684096 Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.
+GSM1684097 Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.
+GSM1684098 Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.
+GSM1684099 Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.
+GSM1684100 Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.
+           molecule_ch1
+GSM1684095    total RNA
+GSM1684096    total RNA
+GSM1684097    total RNA
+GSM1684098    total RNA
+GSM1684099    total RNA
+GSM1684100    total RNA
+                                                                                                                                                                              extract_protocol_ch1
+GSM1684095 RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.
+GSM1684096 RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.
+GSM1684097 RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.
+GSM1684098 RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.
+GSM1684099 RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.
+GSM1684100 RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.
+           label_ch1
+GSM1684095    biotin
+GSM1684096    biotin
+GSM1684097    biotin
+GSM1684098    biotin
+GSM1684099    biotin
+GSM1684100    biotin
+                                                                           label_protocol_ch1
+GSM1684095 Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays
+GSM1684096 Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays
+GSM1684097 Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays
+GSM1684098 Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays
+GSM1684099 Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays
+GSM1684100 Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays
+           taxid_ch1                             hyb_protocol
+GSM1684095      9606 Standard Illumina hybridization protocol
+GSM1684096      9606 Standard Illumina hybridization protocol
+GSM1684097      9606 Standard Illumina hybridization protocol
+GSM1684098      9606 Standard Illumina hybridization protocol
+GSM1684099      9606 Standard Illumina hybridization protocol
+GSM1684100      9606 Standard Illumina hybridization protocol
+                                 scan_protocol
+GSM1684095 Standard Illumina scanning protocol
+GSM1684096 Standard Illumina scanning protocol
+GSM1684097 Standard Illumina scanning protocol
+GSM1684098 Standard Illumina scanning protocol
+GSM1684099 Standard Illumina scanning protocol
+GSM1684100 Standard Illumina scanning protocol
+                                 description
+GSM1684095 Donor 1 - No virus control   - 8h
+GSM1684096  Donor 1 - Influenza treated - 8h
+GSM1684097 Donor 2 - No virus control   - 8h
+GSM1684098  Donor 2 - Influenza treated - 8h
+GSM1684099 Donor 3 - No virus control   - 8h
+GSM1684100  Donor 3 - Influenza treated - 8h
+                                                                             data_processing
+GSM1684095 The data were normalized using quantile normalization with Illumina Genome Studio
+GSM1684096 The data were normalized using quantile normalization with Illumina Genome Studio
+GSM1684097 The data were normalized using quantile normalization with Illumina Genome Studio
+GSM1684098 The data were normalized using quantile normalization with Illumina Genome Studio
+GSM1684099 The data were normalized using quantile normalization with Illumina Genome Studio
+GSM1684100 The data were normalized using quantile normalization with Illumina Genome Studio
+           platform_id      contact_name contact_department
+GSM1684095    GPL10558 Michelle,Ann,Gill         Pediatrics
+GSM1684096    GPL10558 Michelle,Ann,Gill         Pediatrics
+GSM1684097    GPL10558 Michelle,Ann,Gill         Pediatrics
+GSM1684098    GPL10558 Michelle,Ann,Gill         Pediatrics
+GSM1684099    GPL10558 Michelle,Ann,Gill         Pediatrics
+GSM1684100    GPL10558 Michelle,Ann,Gill         Pediatrics
+                                         contact_institute
+GSM1684095 University of Texas Southwestern Medical Center
+GSM1684096 University of Texas Southwestern Medical Center
+GSM1684097 University of Texas Southwestern Medical Center
+GSM1684098 University of Texas Southwestern Medical Center
+GSM1684099 University of Texas Southwestern Medical Center
+GSM1684100 University of Texas Southwestern Medical Center
+                 contact_address contact_city contact_zip/postal_code
+GSM1684095 5323 Harry Hines Blvd       Dallas                   75390
+GSM1684096 5323 Harry Hines Blvd       Dallas                   75390
+GSM1684097 5323 Harry Hines Blvd       Dallas                   75390
+GSM1684098 5323 Harry Hines Blvd       Dallas                   75390
+GSM1684099 5323 Harry Hines Blvd       Dallas                   75390
+GSM1684100 5323 Harry Hines Blvd       Dallas                   75390
+           contact_country supplementary_file data_row_count        agent:ch1
+GSM1684095             USA               NONE          47321 No virus control
+GSM1684096             USA               NONE          47321      Influenza A
+GSM1684097             USA               NONE          47321 No virus control
+GSM1684098             USA               NONE          47321      Influenza A
+GSM1684099             USA               NONE          47321 No virus control
+GSM1684100             USA               NONE          47321      Influenza A
+                cell type:ch1 donor:ch1
+GSM1684095 Primary human pDCs   Donor 1
+GSM1684096 Primary human pDCs   Donor 1
+GSM1684097 Primary human pDCs   Donor 2
+GSM1684098 Primary human pDCs   Donor 2
+GSM1684099 Primary human pDCs   Donor 3
+GSM1684100 Primary human pDCs   Donor 3</code></pre>
+</div>
+</div>
+<p>Getting gene expression data. And we are organizing it so that we can process it and then we take the log2 for the computation.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>exprs_data <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"C:/Users/alper/Desktop/Quarto Influenza A/GSE68849/GSE68849_non-normalized.txt.gz"</span>, <span class="at">data.table =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exprs_data) <span class="ot">&lt;-</span> <span class="fu">make.names</span>(exprs_data[, <span class="dv">1</span>], <span class="at">unique =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>exprs_data <span class="ot">&lt;-</span> exprs_data[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>signal_column <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"AVG_Signal"</span>, <span class="fu">colnames</span>(exprs_data))</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>exprs_clean <span class="ot">&lt;-</span> exprs_data[, signal_column]</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exprs_clean) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">".AVG_Signal"</span>, <span class="st">""</span>, <span class="fu">colnames</span>(exprs_clean))</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>found_column <span class="ot">&lt;-</span> <span class="fu">apply</span>(p_data, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">any</span>(<span class="fu">grepl</span>(<span class="st">"5522887032"</span>, x, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(found_column)[found_column]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>character(0)</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(p_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "title"                   "geo_accession"          
+ [3] "status"                  "submission_date"        
+ [5] "last_update_date"        "type"                   
+ [7] "channel_count"           "source_name_ch1"        
+ [9] "organism_ch1"            "characteristics_ch1"    
+[11] "characteristics_ch1.1"   "characteristics_ch1.2"  
+[13] "treatment_protocol_ch1"  "growth_protocol_ch1"    
+[15] "molecule_ch1"            "extract_protocol_ch1"   
+[17] "label_ch1"               "label_protocol_ch1"     
+[19] "taxid_ch1"               "hyb_protocol"           
+[21] "scan_protocol"           "description"            
+[23] "data_processing"         "platform_id"            
+[25] "contact_name"            "contact_department"     
+[27] "contact_institute"       "contact_address"        
+[29] "contact_city"            "contact_zip/postal_code"
+[31] "contact_country"         "supplementary_file"     
+[33] "data_row_count"          "agent:ch1"              
+[35] "cell type:ch1"           "donor:ch1"              </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exprs_clean) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(p_data)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>exprs_log2 <span class="ot">&lt;-</span> <span class="fu">log2</span>(exprs_clean <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>exprs_log2 <span class="ot">&lt;-</span> exprs_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Getting gene information data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>gen_data <span class="ot">&lt;-</span> <span class="fu">fData</span>(eset68849)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gen_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       ID      Species Source  Search_Key  Transcript ILMN_Gene
+ILMN_1343291 ILMN_1343291 Homo sapiens RefSeq NM_001402.4   ILMN_5311    EEF1A1
+ILMN_1343295 ILMN_1343295 Homo sapiens RefSeq              ILMN_27206     GAPDH
+ILMN_1651199 ILMN_1651199 Homo sapiens RefSeq XM_931492.1  ILMN_46046 LOC643334
+ILMN_1651209 ILMN_1651209 Homo sapiens RefSeq NM_182838.1   ILMN_8692   SLC35E2
+ILMN_1651210 ILMN_1651210 Homo sapiens RefSeq XM_941691.1 ILMN_138115    DUSP22
+ILMN_1651221 ILMN_1651221 Homo sapiens RefSeq XM_926225.1  ILMN_33528 LOC642820
+             Source_Reference_ID   RefSeq_ID Unigene_ID Entrez_Gene_ID       GI
+ILMN_1343291         NM_001402.5 NM_001402.5                      1915 83367078
+ILMN_1343295         NM_002046.3 NM_002046.3                      2597 83641890
+ILMN_1651199         XM_944551.1 XM_944551.1                    643334 88959248
+ILMN_1651209         NM_182838.1 NM_182838.1                      9906 33469136
+ILMN_1651210         XM_941691.1 XM_941691.1                     56940 89070645
+ILMN_1651221         XM_926225.1 XM_926225.1                    642820 89031535
+               Accession    Symbol Protein_Product     Probe_Id
+ILMN_1343291 NM_001402.5    EEF1A1     NP_001393.1 ILMN_1343291
+ILMN_1343295 NM_002046.3     GAPDH     NP_002037.2 ILMN_1343295
+ILMN_1651199 XM_944551.1 LOC643334     XP_949644.1 ILMN_1651199
+ILMN_1651209 NM_182838.1   SLC35E2     NP_878258.1 ILMN_1651209
+ILMN_1651210 XM_941691.1    DUSP22     XP_946784.1 ILMN_1651210
+ILMN_1651221 XM_926225.1 LOC642820     XP_931318.1 ILMN_1651221
+             Array_Address_Id Probe_Type Probe_Start
+ILMN_1343291          3450719          S        1294
+ILMN_1343295          4490161          S         937
+ILMN_1651199          1770632          S           1
+ILMN_1651209          2940221          S        1103
+ILMN_1651210           380154          I        2975
+ILMN_1651221          2490538          S          61
+                                                       SEQUENCE Chromosome
+ILMN_1343291 TGTGTTGAGAGCTTCTCAGACTATCCACCTTTGGGTCGCTTTGCTGTTCG          6
+ILMN_1343295 CTTCAACAGCGACACCCACTCCTCCACCTTTGACGCTGGGGCTGGCATTG         12
+ILMN_1651199 ATGCGAGGCCCCAGGGTTCGGCCCCGCAGCGCCGCTGAGTCCAAGGACCG           
+ILMN_1651209 TCACGGCGTACGCCCTCATGGGGAAAATCTCCCCGGTGACTTTCAGGTCC          1
+ILMN_1651210 TGTGGACATGAGAGTTAGTTCTGTTTTGCCTGCACGGTGGGAGCGGCGTA           
+ILMN_1651221 GCCGCCCCCTGCTTCACGGAGCCTGGTCCCATCAACCGCCGAAGGGCTGA         10
+             Probe_Chr_Orientation                   Probe_Coordinates
+ILMN_1343291                     - 74284362-74284378:74284474-74284506
+ILMN_1343295                     +                     6517320-6517369
+ILMN_1651199                                                          
+ILMN_1651209                     -                     1667141-1667190
+ILMN_1651210                                                          
+ILMN_1651221                     +                   83534280-83534329
+              Cytoband
+ILMN_1343291     6q13c
+ILMN_1343295 12p13.31d
+ILMN_1651199   2q37.3b
+ILMN_1651209  1p36.33a
+ILMN_1651210   6p25.3b
+ILMN_1651221          
+                                                                                  Definition
+ILMN_1343291 Homo sapiens eukaryotic translation elongation factor 1 alpha 1 (EEF1A1), mRNA.
+ILMN_1343295            Homo sapiens glyceraldehyde-3-phosphate dehydrogenase (GAPDH), mRNA.
+ILMN_1651199               PREDICTED: Homo sapiens hypothetical LOC643334 (LOC643334), mRNA.
+ILMN_1651209               Homo sapiens solute carrier family 35, member E2 (SLC35E2), mRNA.
+ILMN_1651210         PREDICTED: Homo sapiens dual specificity phosphatase 22 (DUSP22), mRNA.
+ILMN_1651221       PREDICTED: Homo sapiens hypothetical protein LOC642820 (LOC642820), mRNA.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Ontology_Component
+ILMN_1343291 All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures [goid 5737] [evidence IEA]; All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures [goid 5737] [evidence IEA]; All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures [goid 5737] [pmid 3512269] [evidence TAS]; That part of the cytoplasm that does not contain membranous or particulate subcellular components [goid 5829] [pmid 10368288] [evidence EXP]; A multisubunit nucleotide exchange complex that binds GTP and aminoacyl-tRNAs, and catalyzes their codon-dependent placement at the A-site of the ribosome. In humans, the complex is composed of four subunits, alpha, beta, delta and gamma [goid 5853] [pmid 2564392] [evidence TAS]
+ILMN_1343295                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures [goid 5737] [evidence NAS]; Double layer of lipid molecules that encloses all cells, and, in eukaryotes, many organelles; may be a single or double lipid bilayer; also includes associated proteins [goid 16020] [evidence IEA]
+ILMN_1651199                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+ILMN_1651209                                                                                                                                                                                                                                                                                                                                                                                      Double layer of lipid molecules that encloses all cells, and, in eukaryotes, many organelles; may be a single or double lipid bilayer; also includes associated proteins [goid 16020] [evidence IEA]; Penetrating at least one phospholipid bilayer of a membrane. May also refer to the state of being buried in the bilayer with no exposure outside the bilayer. When used to describe a protein, indicates that all or part of the peptide sequence is embedded in the membrane [goid 16021] [evidence IEA]
+ILMN_1651210                                                                                                                                                                                                                                                                                                                                                                     A membrane-bounded organelle of eukaryotic cells in which chromosomes are housed and replicated. In most cells, the nucleus contains all of the cell's chromosomes except the organellar chromosomes, and is the site of RNA synthesis and processing. In some species, or in specialized cell types, RNA metabolism or DNA replication may be absent [goid 5634] [evidence IEA]; All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures [goid 5737] [evidence IEA]
+ILMN_1651221                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Ontology_Process
+ILMN_1343291                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              The successive addition of amino acid residues to a nascent polypeptide chain during protein biosynthesis [goid 6414] [evidence IEA]; The successive addition of amino acid residues to a nascent polypeptide chain during protein biosynthesis [goid 6414] [pmid 8812466] [evidence TAS]; The successive addition of amino acid residues to a nascent polypeptide chain during protein biosynthesis [goid 6414] [pmid 15189156] [evidence EXP]
+ILMN_1343295 The chemical reactions and pathways involving glucose, the aldohexose gluco-hexose. D-glucose is dextrorotatory and is sometimes known as dextrose; it is an important source of energy for living organisms and is found free as well as combined in homo- and hetero-oligosaccharides and polysaccharides [goid 6006] [evidence IEA]; The chemical reactions and pathways, including anabolism and catabolism, by which living organisms transform chemical substances. Metabolic processes typically transform small molecules, but also include macromolecular processes such as DNA repair and replication, and protein synthesis and degradation [goid 8152] [evidence IEA]; The chemical reactions and pathways involving glucose, the aldohexose gluco-hexose. D-glucose is dextrorotatory and is sometimes known as dextrose; it is an important source of energy for living organisms and is found free as well as combined in homo- and hetero-oligosaccharides and polysaccharides [goid 6006] [evidence IEA]; The chemical reactions and pathways resulting in the breakdown of a monosaccharide (generally glucose) into pyruvate, with the concomitant production of a small amount of ATP. Pyruvate may be converted to ethanol, lactate, or other small molecules, or fed into the TCA cycle [goid 6096] [evidence NAS]; The process of removal or addition of one or more electrons with or without the concomitant removal or addition of a proton or protons [goid 55114] [evidence IEA]
+ILMN_1651199                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+ILMN_1651209                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+ILMN_1651210                                                                                                                                                                                                                                                                                                                                   Any process that terminates the activity of the active enzyme MAP kinase [goid 188] [pmid 9205128] [evidence TAS]; The process of removing one or more phosphoric residues from a protein [goid 6470] [pmid 9205128] [evidence TAS]; A form of programmed cell death induced by external or internal signals that trigger the activity of proteolytic caspases, whose actions dismantle the cell and result in cell death. Apoptosis begins internally with condensation and subsequent fragmentation of the cell nucleus (blebbing) while the plasma membrane remains intact. Other characteristics of apoptosis include DNA fragmentation and the exposure of phosphatidyl serine on the cell surface [goid 6915] [pmid 9205128] [evidence TAS]; The biological process whose specific outcome is the progression of a multicellular organism over time from an initial condition (e.g. a zygote or a young adult) to a later condition (e.g. a multicellular animal or an aged adult) [goid 7275] [pmid 9205128] [evidence TAS]; The multiplication or reproduction of cells, resulting in the expansion of a cell population [goid 8283] [pmid 9205128] [evidence TAS]
+ILMN_1651221                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Ontology_Function
+ILMN_1343291 Interacting selectively with a nucleotide, any compound consisting of a nucleoside that is esterified with (ortho)phosphate or an oligophosphate at any hydroxyl group on the ribose or deoxyribose moiety [goid 166] [evidence IEA]; Functions in chain elongation during polypeptide synthesis at the ribosome [goid 3746] [evidence IEA]; Catalysis of the reaction: GTP + H2O = GDP + phosphate [goid 3924] [evidence IEA]; Interacting selectively with GTP, guanosine triphosphate [goid 5525] [evidence IEA]; Interacting selectively with a nucleotide, any compound consisting of a nucleoside that is esterified with (ortho)phosphate or an oligophosphate at any hydroxyl group on the ribose or deoxyribose moiety [goid 166] [evidence IEA]; Functions in chain elongation during polypeptide synthesis at the ribosome [goid 3746] [evidence IEA]; Catalysis of the reaction: GTP + H2O = GDP + phosphate [goid 3924] [evidence IEA]; Interacting selectively with GTP, guanosine triphosphate [goid 5525] [evidence IEA]; Interacting selectively with a nucleotide, any compound consisting of a nucleoside that is esterified with (ortho)phosphate or an oligophosphate at any hydroxyl group on the ribose or deoxyribose moiety [goid 166] [evidence IEA]; Catalysis of the reaction: GTP + H2O = GDP + phosphate [goid 3924] [evidence IEA]; Interacting selectively with GTP, guanosine triphosphate [goid 5525] [evidence IEA]; Interacting selectively with a nucleotide, any compound consisting of a nucleoside that is esterified with (ortho)phosphate or an oligophosphate at any hydroxyl group on the ribose or deoxyribose moiety [goid 166] [evidence IEA]; Catalysis of the reaction: GTP + H2O = GDP + phosphate [goid 3924] [evidence IEA]; Interacting selectively with GTP, guanosine triphosphate [goid 5525] [evidence IEA]; Interacting selectively with a nucleotide, any compound consisting of a nucleoside that is esterified with (ortho)phosphate or an oligophosphate at any hydroxyl group on the ribose or deoxyribose moiety [goid 166] [evidence IEA]; Functions in chain elongation during polypeptide synthesis at the ribosome [goid 3746] [evidence IEA]; Catalysis of the reaction: GTP + H2O = GDP + phosphate [goid 3924] [evidence IEA]; Interacting selectively with any protein or protein complex (a complex of two or more proteins that may include other nonprotein molecules) [goid 5515] [pmid 17373842] [evidence IPI]; Interacting selectively with any protein or protein complex (a complex of two or more proteins that may include other nonprotein molecules) [goid 5515] [pmid 15231747] [evidence IPI]; Interacting selectively with GTP, guanosine triphosphate [goid 5525] [pmid 3512269] [evidence TAS]
+ILMN_1343295                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     Catalysis of a biochemical reaction at physiological temperatures. In biologically catalyzed reactions, the reactants are known as substrates, and the catalysts are naturally occurring macromolecular substances known as enzymes. Enzymes possess specific binding sites for substrates, and are usually composed wholly or largely of protein, but RNA that has catalytic activity (ribozyme) is often also regarded as enzymatic [goid 3824] [evidence IEA]; Catalysis of the reaction: D-glyceraldehyde 3-phosphate + phosphate + NAD+ = 3-phospho-D-glyceroyl phosphate + NADH + H+ [goid 4365] [evidence IEA]; The selective, often stoichiometric, interaction of a molecule with one or more specific sites on another molecule [goid 5488] [evidence IEA]; Interacting selectively with nicotinamide adenine dinucleotide, a coenzyme involved in many redox and biosynthetic reactions; binding may be to either the oxidized form, NAD, or the reduced form, NADH [goid 51287] [evidence IEA]; Catalysis of the reaction: D-glyceraldehyde 3-phosphate + phosphate + NAD+ = 3-phospho-D-glyceroyl phosphate + NADH + H+ [goid 4365] [pmid 3170585] [evidence NAS]; Catalysis of the reaction: D-glyceraldehyde 3-phosphate + phosphate + NAD+ = 3-phospho-D-glyceroyl phosphate + NADH + H+ [goid 4365] [pmid 7030790] [evidence NAS]; Interacting selectively with any protein or protein complex (a complex of two or more proteins that may include other nonprotein molecules) [goid 5515] [pmid 17540579] [evidence IPI]; Catalysis of an oxidation-reduction (redox) reaction, a reversible chemical reaction in which the oxidation state of an atom or atoms within a molecule is altered. One substrate acts as a hydrogen or electron donor and becomes oxidized, while the other acts as hydrogen or electron acceptor and becomes reduced [goid 16491] [evidence IEA]; Interacting selectively with nicotinamide adenine dinucleotide, a coenzyme involved in many redox and biosynthetic reactions; binding may be to either the oxidized form, NAD, or the reduced form, NADH [goid 51287] [evidence IEA]
+ILMN_1651199                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ILMN_1651209                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ILMN_1651210                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Catalysis of the reaction: protein tyrosine phosphate + H2O = protein tyrosine + phosphate [goid 4725] [evidence IEA]; Catalysis of the reaction: protein serine/threonine/tyrosine phosphate + H2O = protein serine/threonine/tyrosine + phosphate [goid 8138] [evidence IEA]; Catalysis of the hydrolysis of various bonds, e.g. C-O, C-N, C-C, phosphoric anhydride bonds, etc. Hydrolase is the systematic name for any enzyme of EC class 3 [goid 16787] [evidence IEA]
+ILMN_1651221                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                 Synonyms
+ILMN_1343291 EEF1A; FLJ25721; CCS-3; PTI1; CCS3; MGC102687; MGC16224; EF-Tu; eEF1A-1; EEF-1; MGC131894; HNGC:16303; GRAF-1EF; LENG7; EF1A
+ILMN_1343295                                                                                                         G3PD; GAPD; MGC88685
+ILMN_1651199                                                                                                                             
+ILMN_1651209                                      MGC117254; MGC138494; DKFZp686M0869; FLJ34996; FLJ44537; MGC126715; MGC104754; KIAA0447
+ILMN_1651210                                                                                                                             
+ILMN_1651221                                                                                                                             
+                                                                                   Obsolete_Probe_Id
+ILMN_1343291         EEF1A; PTI1; MGC16224; eEF1A-1; EF-Tu; EEF-1; HNGC:16303; GRAF-1EF; LENG7; EF1A
+ILMN_1343295                                                                    GAPD; MGC88685; G3PD
+ILMN_1651199                                                                                        
+ILMN_1651209 FLJ44537; MGC126715; MGC117254; MGC104754; MGC138494; DKFZp686M0869; KIAA0447; FLJ34996
+ILMN_1651210                                                                                        
+ILMN_1651221                                                                                        
+                  GB_ACC
+ILMN_1343291 NM_001402.5
+ILMN_1343295 NM_002046.3
+ILMN_1651199 XM_944551.1
+ILMN_1651209 NM_182838.1
+ILMN_1651210 XM_941691.1
+ILMN_1651221 XM_926225.1</code></pre>
+</div>
+</div>
+<p>For this project I didn’t need experimental data and annotation data.</p>
+<p>The expression data lacks probe IDs; We need to add this information to it. The gene data contains this information, and since both data frames are of the same length, they correspond to one another. Therefore, we will extract the probe IDs and gene names from the gene data and transfer them to the expression data. Also we simplify it the gene data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>exprs_log2 <span class="ot">&lt;-</span> exprs_log2 <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"Prob_ID"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>gen_data <span class="ot">&lt;-</span> gen_data <span class="sc">|&gt;</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">"ID"</span>,<span class="st">"ILMN_Gene"</span>))</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>exprs_log2 <span class="ot">&lt;-</span> <span class="fu">left_join</span>(exprs_log2, gen_data, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Prob_ID"</span> <span class="ot">=</span> <span class="st">"ID"</span>)) <span class="sc">|&gt;</span>  </span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="st">`</span><span class="at">ILMN_Gene</span><span class="st">`</span>, <span class="at">.after =</span> Prob_ID)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We will clean the NAs in the expression data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>exprs_log2 <span class="ot">&lt;-</span> exprs_log2 <span class="sc">|&gt;</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We want to create a Volcano Plot. Initially, we apply the log2 of the data. Now we need to calculate fold change and p value. For these we will use the limma library. But before the using the library we must turn our data frame to matrix. And we must eliminate duplicate copies of the same genes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>expression_data_single_genes <span class="ot">&lt;-</span> exprs_log2 <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">ILMN_Gene</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> <span class="co">#We calculate the average of the data from the same genes.</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `summarize()`.
+ℹ In argument: `across(where(is.numeric), mean, na.rm = TRUE)`.
+ℹ In group 1: `ILMN_Gene = "1-Dec"`.
+Caused by warning:
+! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+Supply arguments directly to `.fns` through an anonymous function instead.
+
+  # Previously
+  across(a:b, mean, na.rm = TRUE)
+
+  # Now
+  across(a:b, \(x) mean(x, na.rm = TRUE))</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>expression_data_single_genes <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expression_data_single_genes)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(expression_data_single_genes) <span class="ot">&lt;-</span> expression_data_single_genes<span class="sc">$</span><span class="st">`</span><span class="at">ILMN_Gene</span><span class="st">`</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>expr_matrix <span class="ot">&lt;-</span> expression_data_single_genes<span class="sc">|&gt;</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">ILMN_Gene</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now we need to determine which data belong to the patient and which to the control group. If we look up the clinical data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(p_data, <span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Örneklerin Klinik Dağılımı"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Örneklerin Klinik Dağılımı</caption>
+<colgroup>
+<col style="width: 0%">
+<col style="width: 2%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 2%">
+<col style="width: 5%">
+<col style="width: 15%">
+<col style="width: 1%">
+<col style="width: 14%">
+<col style="width: 0%">
+<col style="width: 6%">
+<col style="width: 0%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 6%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 3%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">title</th>
+<th style="text-align: left;">geo_accession</th>
+<th style="text-align: left;">status</th>
+<th style="text-align: left;">submission_date</th>
+<th style="text-align: left;">last_update_date</th>
+<th style="text-align: left;">type</th>
+<th style="text-align: left;">channel_count</th>
+<th style="text-align: left;">source_name_ch1</th>
+<th style="text-align: left;">organism_ch1</th>
+<th style="text-align: left;">characteristics_ch1</th>
+<th style="text-align: left;">characteristics_ch1.1</th>
+<th style="text-align: left;">characteristics_ch1.2</th>
+<th style="text-align: left;">treatment_protocol_ch1</th>
+<th style="text-align: left;">growth_protocol_ch1</th>
+<th style="text-align: left;">molecule_ch1</th>
+<th style="text-align: left;">extract_protocol_ch1</th>
+<th style="text-align: left;">label_ch1</th>
+<th style="text-align: left;">label_protocol_ch1</th>
+<th style="text-align: left;">taxid_ch1</th>
+<th style="text-align: left;">hyb_protocol</th>
+<th style="text-align: left;">scan_protocol</th>
+<th style="text-align: left;">description</th>
+<th style="text-align: left;">data_processing</th>
+<th style="text-align: left;">platform_id</th>
+<th style="text-align: left;">contact_name</th>
+<th style="text-align: left;">contact_department</th>
+<th style="text-align: left;">contact_institute</th>
+<th style="text-align: left;">contact_address</th>
+<th style="text-align: left;">contact_city</th>
+<th style="text-align: left;">contact_zip/postal_code</th>
+<th style="text-align: left;">contact_country</th>
+<th style="text-align: left;">supplementary_file</th>
+<th style="text-align: left;">data_row_count</th>
+<th style="text-align: left;">agent:ch1</th>
+<th style="text-align: left;">cell type:ch1</th>
+<th style="text-align: left;">donor:ch1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">GSM1684095</td>
+<td style="text-align: left;">Donor 1 - No virus control - 8h</td>
+<td style="text-align: left;">GSM1684095</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 1</td>
+<td style="text-align: left;">agent: No virus control</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 1 - No virus control - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">No virus control</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GSM1684096</td>
+<td style="text-align: left;">Donor 1 - Influenza treated - 8h</td>
+<td style="text-align: left;">GSM1684096</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 1</td>
+<td style="text-align: left;">agent: Influenza A</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 1 - Influenza treated - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">Influenza A</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GSM1684097</td>
+<td style="text-align: left;">Donor 2 - No virus control - 8h</td>
+<td style="text-align: left;">GSM1684097</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 2</td>
+<td style="text-align: left;">agent: No virus control</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 2 - No virus control - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">No virus control</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GSM1684098</td>
+<td style="text-align: left;">Donor 2 - Influenza treated - 8h</td>
+<td style="text-align: left;">GSM1684098</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 2</td>
+<td style="text-align: left;">agent: Influenza A</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 2 - Influenza treated - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">Influenza A</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GSM1684099</td>
+<td style="text-align: left;">Donor 3 - No virus control - 8h</td>
+<td style="text-align: left;">GSM1684099</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 3</td>
+<td style="text-align: left;">agent: No virus control</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 3 - No virus control - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">No virus control</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GSM1684100</td>
+<td style="text-align: left;">Donor 3 - Influenza treated - 8h</td>
+<td style="text-align: left;">GSM1684100</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 3</td>
+<td style="text-align: left;">agent: Influenza A</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 3 - Influenza treated - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">Influenza A</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GSM1684101</td>
+<td style="text-align: left;">Donor 4 - No virus control - 8h</td>
+<td style="text-align: left;">GSM1684101</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 4</td>
+<td style="text-align: left;">agent: No virus control</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 4 - No virus control - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">No virus control</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GSM1684102</td>
+<td style="text-align: left;">Donor 4 - Influenza treated - 8h</td>
+<td style="text-align: left;">GSM1684102</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 4</td>
+<td style="text-align: left;">agent: Influenza A</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 4 - Influenza treated - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">Influenza A</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GSM1684103</td>
+<td style="text-align: left;">Donor 5 - No virus control - 8h</td>
+<td style="text-align: left;">GSM1684103</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 5</td>
+<td style="text-align: left;">agent: No virus control</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 5 - No virus control - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">No virus control</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GSM1684104</td>
+<td style="text-align: left;">Donor 5 - Influenza treated - 8h</td>
+<td style="text-align: left;">GSM1684104</td>
+<td style="text-align: left;">Public on Feb 01 2016</td>
+<td style="text-align: left;">May 13 2015</td>
+<td style="text-align: left;">Feb 01 2016</td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Blood pDCs</td>
+<td style="text-align: left;">Homo sapiens</td>
+<td style="text-align: left;">donor: Donor 5</td>
+<td style="text-align: left;">agent: Influenza A</td>
+<td style="text-align: left;">cell type: Primary human pDCs</td>
+<td style="text-align: left;">pDCs were cultured with or without influenza A virus for 8 h.</td>
+<td style="text-align: left;">Primary human pDCs were cultured in complete RPMI media (10% FBS, 1% penicillin-streptomycin, 1% sodium pyruvate, 1% HEPES buffer solution, 1% non-essential amino acids, 1% glutamate) and IL-3.</td>
+<td style="text-align: left;">total RNA</td>
+<td style="text-align: left;">RNA was extracted using Arcturus® PicoPure® RNA isolation kit in accordance with the prescribed protocol provided with the kit. Quality control was performed with Agilent Bioanalyser.</td>
+<td style="text-align: left;">biotin</td>
+<td style="text-align: left;">Biotinylated cRNA were prepared with the Ambion MessageAmp kit for Illumina arrays</td>
+<td style="text-align: left;">9606</td>
+<td style="text-align: left;">Standard Illumina hybridization protocol</td>
+<td style="text-align: left;">Standard Illumina scanning protocol</td>
+<td style="text-align: left;">Donor 5 - Influenza treated - 8h</td>
+<td style="text-align: left;">The data were normalized using quantile normalization with Illumina Genome Studio</td>
+<td style="text-align: left;">GPL10558</td>
+<td style="text-align: left;">Michelle,Ann,Gill</td>
+<td style="text-align: left;">Pediatrics</td>
+<td style="text-align: left;">University of Texas Southwestern Medical Center</td>
+<td style="text-align: left;">5323 Harry Hines Blvd</td>
+<td style="text-align: left;">Dallas</td>
+<td style="text-align: left;">75390</td>
+<td style="text-align: left;">USA</td>
+<td style="text-align: left;">NONE</td>
+<td style="text-align: left;">47321</td>
+<td style="text-align: left;">Influenza A</td>
+<td style="text-align: left;">Primary human pDCs</td>
+<td style="text-align: left;">Donor 5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The control comes first then comes patient and again control and then again patient. Like ABABABABAB</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>groups_ <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"control"</span>,<span class="st">"patient"</span>), <span class="dv">5</span>))</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Crating the model matrix.</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>groups_ <span class="ot">&lt;-</span> <span class="fu">factor</span>(groups_, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"patient"</span>))</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span><span class="dv">0</span> <span class="sc">+</span> groups_)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(design) <span class="ot">&lt;-</span> <span class="fu">levels</span>(groups_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And now building and comparing the model to Limma</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmFit</span>(expr_matrix, design)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Showing the which groups to the difference will be calculated.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>contrast_matrix <span class="ot">&lt;-</span> <span class="fu">makeContrasts</span>(<span class="at">patient_vs_control =</span> patient <span class="sc">-</span> control, <span class="at">levels =</span> design)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">contrasts.fit</span>(fit, contrast_matrix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And adding the eBayes function for increase the statistical reliability.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">eBayes</span>(fit2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For the last one we getting result table.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>result_table <span class="ot">&lt;-</span> <span class="fu">topTable</span>(fit2, <span class="at">adjust =</span> <span class="st">"fdr"</span>, <span class="at">number =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We have all the data we need for Volcano plot. We use EnhancedVolcano library to create plot more easily.</p>
+<p>Let’s enter the necessary data to function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">EnhancedVolcano</span>(result_table,</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">lab =</span> <span class="fu">rownames</span>(result_table),</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="st">'logFC'</span>,</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> <span class="st">'P.Value'</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">'Influenza A Gene Expression Change'</span>,</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">subtitle =</span> <span class="st">'Changes in gene expression in individuals infected with Influenza A </span><span class="sc">\n</span><span class="st"> virus compared to healthy individuals.'</span>,</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">axisLabSize =</span> <span class="dv">12</span>,</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">legendLabSize =</span> <span class="dv">12</span>,</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">pCutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">FCcutoff =</span> <span class="fl">1.0</span>,</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointSize =</span> <span class="fl">3.0</span>,</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">labSize =</span> <span class="fl">5.0</span>,</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">legendPosition =</span> <span class="st">'bottom'</span></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+ℹ The deprecated feature was likely used in the EnhancedVolcano package.
+  Please report the issue to the authors.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+ℹ The deprecated feature was likely used in the EnhancedVolcano package.
+  Please report the issue to the authors.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Quarto-Influenza-A_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And the result. Result shows the increase of the IFNA family. IFNA gene family is produces potent antiviral and immunomodulatory proteins that body cells secrete in response to viral infections, cancer, and immune system signals. Here the patients has Influenza A virus. This is explains the accuracy of our table.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
