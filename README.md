@@ -18,6 +18,7 @@ To reproduce this analysis, you will need R and the following packages:
 - `GEOquery`, `limma` (Bioconductor)
 - `dplyr`, `tibble`
 - `EnhancedVolcano`, `kableExtra`
+
 This is the result table of the project. 
 <img width="1200" height="960" alt="Influenza A Gene Expression Change" src="https://github.com/user-attachments/assets/eaf39bb3-bb5b-49e0-b5c5-5f412a2ea0a9" />
 Result shows the increase of the IFNA family. IFNA gene family is produces potent antiviral and immunomodulatory proteins that body cells secrete in response to viral infections, cancer, and immune system signals. Here the patients has Influenza A virus. This is explains the accuracy of our table.
