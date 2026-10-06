@@ -54,6 +54,8 @@ BiocManager::install(c("GEOquery", "limma", "Biobase", "EnhancedVolcano"))
 
 Open `Influenza_A_DE_analysis.qmd` in RStudio and render it with Quarto. The data are downloaded automatically from GEO, so an internet connection is needed.
 
+<img width="1200" height="960" alt="image" src="https://github.com/user-attachments/assets/cf61274d-f8e4-482b-bcbc-a2102cbe262e" />
+
 Contact: [LinkedIn link]
 **Alperen Korkmaz**  
 *Undergraduate Student | BSc Biology , Gazi University*
