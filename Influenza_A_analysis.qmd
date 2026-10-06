@@ -1,0 +1,211 @@
+---
+title: "Influenza A Differential Expression Analysis"
+author: "Alperen Korkmaz"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+---
+
+# Differential expression analysis of GSE68849
+
+This analysis uses the public GEO dataset GSE68849 (Illumina HumanHT-12 V4.0, GPL10558): primary human plasmacytoid dendritic cells (pDCs) from donors, exposed to influenza A for 8 hours ex vivo or left as controls (5 vs 5 samples). Differential expression is tested with limma.
+
+## 1. Libraries
+
+```{r}
+#| message: false
+library(tidyverse)
+library(Biobase)
+library(GEOquery)
+library(limma)
+library(EnhancedVolcano)
+library(knitr)
+```
+
+## 2. Import the dataset
+
+```{r}
+#| message: false
+gse <- getGEO("GSE68849", GSEMatrix = TRUE)
+eset <- gse[[1]]
+```
+
+The ExpressionSet object holds three parts: `exprs()` (expression values), `pData()` (sample metadata) and `fData()` (probe annotation).
+
+## 3. Sample metadata
+
+```{r}
+p_data <- pData(eset)
+
+p_data |>
+  select(any_of(c("geo_accession", "title"))) |>
+  kable(caption = "Samples in GSE68849")
+```
+
+## 4. Expression values
+
+The submitters quantile-normalised the data with Illumina GenomeStudio (as stated in the GEO record). Limma expects log2-scale values, so we check the scale first.
+
+```{r}
+expr <- exprs(eset)
+range(expr)
+```
+
+```{r}
+if (max(expr) > 100) {
+  if (min(expr) <= 0) {
+    stop("Raw-scale values include zero or negative numbers. Check the data before log2.")
+  }
+  expr <- log2(expr)
+}
+range(expr)
+```
+
+After this step the values should lie roughly between 4 and 16.
+
+## 5. Groups
+
+Group labels are read from the sample titles and characteristics instead of being assumed.
+
+```{r}
+meta_cols <- c("title", grep("characteristics", colnames(p_data), value = TRUE))
+meta_text <- apply(p_data[, meta_cols, drop = FALSE], 1, paste, collapse = " ")
+
+group <- factor(
+  ifelse(grepl("control", meta_text, ignore.case = TRUE), "control", "flu"),
+  levels = c("control", "flu")
+)
+
+table(group)
+stopifnot(all(table(group) == 5))
+```
+
+Check whether the samples are paired by donor (each donor has one control and one flu sample):
+
+```{r}
+donor_match <- regmatches(meta_text,
+                          regexpr("donor[ _:-]*[0-9]+", meta_text, ignore.case = TRUE))
+paired <- length(donor_match) == length(meta_text)
+
+if (paired) {
+  donor <- factor(gsub("\\D", "", donor_match))
+  paired <- all(table(donor, group) == 1)
+}
+
+paired
+```
+
+If `paired` is `TRUE`, the model below includes donor as a blocking factor.
+
+## 6. Collapse probes to genes
+
+Several probes can map to the same gene. For simplicity, probe values of the same gene are averaged.
+
+```{r}
+gene_info <- fData(eset) |>
+  select(ID, ILMN_Gene)
+
+expr_genes <- expr |>
+  as.data.frame() |>
+  rownames_to_column("Prob_ID") |>
+  left_join(gene_info, by = c("Prob_ID" = "ID")) |>
+  filter(!is.na(ILMN_Gene), ILMN_Gene != "") |>
+  select(-Prob_ID) |>
+  group_by(ILMN_Gene) |>
+  summarize(across(everything(), \(x) mean(x, na.rm = TRUE))) |>
+  as.data.frame() |>
+  column_to_rownames("ILMN_Gene") |>
+  as.matrix()
+
+stopifnot(identical(colnames(expr_genes), rownames(p_data)))
+dim(expr_genes)
+```
+
+## 7. Quality control
+
+```{r}
+boxplot(expr_genes, las = 2, cex.axis = 0.6,
+        main = "Expression per sample (log2)")
+```
+
+```{r}
+pca <- prcomp(t(expr_genes), scale. = TRUE)
+plot(pca$x[, 1], pca$x[, 2],
+     col = ifelse(group == "flu", "red", "blue"), pch = 19,
+     xlab = "PC1", ylab = "PC2", main = "PCA of samples")
+legend("topright", legend = c("control", "flu"),
+       col = c("blue", "red"), pch = 19)
+text(pca$x[, 1], pca$x[, 2], labels = donor, pos = 3, cex = 0.8)
+```
+
+## 8. Differential expression with limma
+
+```{r}
+if (paired) {
+  design <- model.matrix(~ donor + group)
+} else {
+  design <- model.matrix(~ group)
+}
+
+fit <- lmFit(expr_genes, design)
+fit <- eBayes(fit)
+
+result_table <- topTable(fit, coef = "groupflu", number = Inf,
+                         adjust.method = "BH")
+result_table$Symbol <- rownames(result_table)
+```
+
+## 9. Results
+
+```{r}
+padj_cut <- 0.05
+lfc_cut  <- 1
+
+n_sig  <- sum(result_table$adj.P.Val < padj_cut)
+n_up   <- sum(result_table$adj.P.Val < padj_cut & result_table$logFC >  lfc_cut)
+n_down <- sum(result_table$adj.P.Val < padj_cut & result_table$logFC < -lfc_cut)
+
+top10 <- head(result_table[order(result_table$adj.P.Val),
+                           c("Symbol", "logFC", "adj.P.Val")], 10)
+```
+
+Using thresholds of adjusted p < `r padj_cut` and |log2 fold change| > `r lfc_cut`, `r n_up` genes were upregulated and `r n_down` were downregulated in influenza A-exposed pDCs compared with controls (`r n_sig` genes had adjusted p < `r padj_cut` regardless of fold change).
+
+```{r}
+kable(top10, digits = 4, row.names = FALSE,
+      caption = "Top 10 genes by adjusted p-value")
+```
+
+Plasmacytoid dendritic cells are major producers of type I interferons, so a strong interferon-related response after influenza exposure is expected. This agrees with known biology and works as a sanity check, but it does not by itself validate the analysis.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+EnhancedVolcano(result_table,
+                lab = rownames(result_table),
+                x = "logFC",
+                y = "adj.P.Val",
+                ylab = bquote(~-Log[10]~ "adjusted P"),
+                title = "Influenza A-exposed pDCs vs control",
+                subtitle = "8 h ex vivo exposure, GSE68849",
+                axisLabSize = 12,
+                legendLabSize = 12,
+                pCutoff = padj_cut,
+                FCcutoff = lfc_cut,
+                pointSize = 3.0,
+                labSize = 5.0,
+                legendPosition = "bottom")
+```
+
+## 10. Limitations
+
+- Small sample size (5 vs 5).
+- Only differential expression was performed; no pathway or GO enrichment yet.
+- Probes of the same gene were averaged, which is a simplification.
+
+## Session information
+
+```{r}
+sessionInfo()
+```
