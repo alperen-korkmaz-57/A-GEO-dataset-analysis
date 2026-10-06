@@ -35,6 +35,8 @@ Top 10 genes by adjusted p-value:
 
 Nine of the ten most significant genes are type I interferon genes (IFNA family and IFNW1). Plasmacytoid dendritic cells are major producers of type I interferons, so this agrees with known biology and works as a sanity check. It does not by itself validate the analysis.
 
+<img width="1200" height="960" alt="image" src="https://github.com/user-attachments/assets/cf61274d-f8e4-482b-bcbc-a2102cbe262e" />
+
 ## Limitations
 
 - Small sample size (5 vs 5).
@@ -52,11 +54,8 @@ install.packages(c("tidyverse", "knitr"))
 BiocManager::install(c("GEOquery", "limma", "Biobase", "EnhancedVolcano"))
 ```
 
-Open `Influenza_A_DE_analysis.qmd` in RStudio and render it with Quarto. The data are downloaded automatically from GEO, so an internet connection is needed.
+Open `Influenza_A_analysis.qmd` in RStudio and render it with Quarto. The data are downloaded automatically from GEO, so an internet connection is needed.
 
-<img width="1200" height="960" alt="image" src="https://github.com/user-attachments/assets/cf61274d-f8e4-482b-bcbc-a2102cbe262e" />
-
-Contact: [LinkedIn link]
 **Alperen Korkmaz**  
 *Undergraduate Student | BSc Biology , Gazi University*
 
