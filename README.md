@@ -38,11 +38,13 @@ Result shows the increase of the IFNA family. IFNA gene family is produces poten
 About the Author
 
 **Alperen Korkmaz**  
-*Undergraduate Student | BSc Biology (4rd Year), Gazi University*
+*Undergraduate Student | BSc Biology , Gazi University*
 
-I am a Biology undergraduate student with a strong focus on bioinformatics, computational biology, and data science. I am passionate about bridging the gap between molecular biology and computational solutions, specifically in transcriptomic data analysis, variant calling workflows, and evolutionary genetics. I actively build analytical pipelines using R and Linux environments.
+I am learning bioinformatics by working through datasets in R and on the Linux command line.
 
-This repository serves as a portfolio piece demonstrating my proficiency in processing and visualizing high-throughput genomic data. 
+This repository is a learning project on differential expression analysis of a
+public GEO dataset. See "Limitations" for what is not covered yet. Feedback is
+welcome.
 
 **Let's Connect:**
 - **Email:** [alperen57korkmaz@gmail.com]
