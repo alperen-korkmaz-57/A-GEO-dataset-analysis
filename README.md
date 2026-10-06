@@ -69,4 +69,4 @@ welcome.
 **Let's Connect:**
 - **Email:** [alperen57korkmaz@gmail.com]
 - **LinkedIn:** [https://www.linkedin.com/in/alperen-korkmaz-ba4b32322/]
-- **Project Report:** [https://alperen-korkmaz-57.github.io/A-GEO-dataset-analysis./]
+- **Rendered report:** [https://alperen-korkmaz-57.github.io/A-GEO-dataset-analysis/]
